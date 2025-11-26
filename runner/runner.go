@@ -11,9 +11,12 @@ func run() bool {
 	runnerLog("Running...")
 
 	args := []string{}
-	if appArgs := os.Getenv("RUNNER_APP_ARGS"); appArgs != "" {
+	appArgs := os.Getenv("RUNNER_APP_ARGS")
+	if appArgs != "" {
 		args = strings.Fields(appArgs)
 		runnerLog("Passing args to app: %v", args)
+	} else {
+		runnerLog("No args passed to app")
 	}
 
 	cmd := exec.Command(buildPath(), args...)

@@ -11,7 +11,7 @@ It currently works with [Traffic](https://github.com/pilu/traffic), [Martini](ht
 
 ## Installation
 
-    go install github.com/gravityblast/fresh@latest
+    go install github.com/shangyanjin/fresh@latest
 
 ## Usage
 
@@ -27,9 +27,11 @@ If `go build` returns an error, it will log it in the tmp folder.
 [Traffic](https://github.com/pilu/traffic) already has a middleware that shows the content of that file if it is present. This middleware is automatically added if you run a Traffic web app in dev mode with Fresh.
 Check the `_examples` folder if you want to use it with Martini or Gocraft Web.
 
-`fresh` uses `./runner.conf` for configuration by default, but you may specify an alternative config filepath using `-c`:
+`fresh` uses `tmp/run.ini` for configuration by default. The config file will be automatically created if it doesn't exist.
 
-    fresh -c other_runner.conf
+All command line arguments are automatically passed to your application:
+
+    fresh --port 8080 --debug
 
 Here is a sample config file with the default settings:
 
@@ -39,7 +41,8 @@ Here is a sample config file with the default settings:
     build_log:         runner-build-errors.log
     valid_ext:         .go, .tpl, .tmpl, .html
     no_rebuild_ext:    .tpl, .tmpl, .html
-    ignored:           assets, tmp
+    ignored:           assets, tmp, node_modules, dist, build, .next, .nuxt, .vuepress, .vite
+    ignored_ext:       .js, .jsx, .ts, .tsx, .mjs, .cjs, .css, .scss, .sass, .less, .styl, .vue, .json, .map, .svg, .png, .jpg, .jpeg, .gif, .ico, .woff, .woff2, .ttf, .eot
     build_delay:       600
     colors:            1
     log_color_main:    cyan
