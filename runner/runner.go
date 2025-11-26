@@ -2,18 +2,14 @@ package runner
 
 import (
 	"io"
-	"os"
 	"os/exec"
-	"strings"
 )
 
 func run() bool {
 	runnerLog("Running...")
 
-	args := []string{}
-	appArgs := os.Getenv("RUNNER_APP_ARGS")
-	if appArgs != "" {
-		args = strings.Fields(appArgs)
+	args := appArguments
+	if len(args) > 0 {
 		runnerLog("Passing args to app: %v", args)
 	} else {
 		runnerLog("No args passed to app")

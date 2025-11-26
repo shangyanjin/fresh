@@ -16,6 +16,7 @@ var (
 	runnerLog    logFunc
 	buildLog     logFunc
 	appLog       logFunc
+	appArguments []string
 )
 
 func flushEvents() {
@@ -108,7 +109,8 @@ func setEnvVars() {
 
 // Watches for file changes in the root directory.
 // After each file system event it builds and (re)starts the application.
-func Start() {
+func Start(appArgs []string) {
+	appArguments = appArgs
 	initLimit()
 	initSettings()
 	initLogFuncs()

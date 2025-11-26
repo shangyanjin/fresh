@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gocraft/web"
-	"github.com/pilu/fresh/runner/runnerutils"
+	"fresh/runner/runnerutils"
 	"net/http"
 )
 
