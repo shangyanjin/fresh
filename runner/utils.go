@@ -47,6 +47,16 @@ func isWatchedFile(path string) bool {
 
 	ext := filepath.Ext(path)
 
+	// Check if extension is in ignored list
+	if ignoredExt := settings["ignored_ext"]; ignoredExt != "" {
+		for _, e := range strings.Split(ignoredExt, ",") {
+			if strings.TrimSpace(e) == ext {
+				return false
+			}
+		}
+	}
+
+	// Check if extension is in valid list
 	for _, e := range strings.Split(settings["valid_ext"], ",") {
 		if strings.TrimSpace(e) == ext {
 			return true

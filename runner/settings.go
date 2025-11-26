@@ -18,14 +18,15 @@ const (
 )
 
 var settings = map[string]string{
-	"config_path":       "./runner.conf",
+	"config_path":       "./tmp/run.ini",
 	"root":              ".",
 	"tmp_path":          "./tmp",
 	"build_name":        "runner-build",
 	"build_log":         "runner-build-errors.log",
 	"valid_ext":         ".go, .tpl, .tmpl, .html",
 	"no_rebuild_ext":    ".tpl, .tmpl, .html",
-	"ignored":           "assets, tmp",
+	"ignored":           "assets, tmp, node_modules, dist, build, .next, .nuxt, .vuepress, .vite",
+	"ignored_ext":       ".js, .jsx, .ts, .tsx, .mjs, .cjs, .css, .scss, .sass, .less, .styl, .vue, .json, .map, .svg, .png, .jpg, .jpeg, .gif, .ico, .woff, .woff2, .ttf, .eot",
 	"build_delay":       "600",
 	"colors":            "1",
 	"log_color_main":    "cyan",
@@ -79,13 +80,56 @@ func loadEnvSettings() {
 	}
 }
 
-func loadRunnerConfigSettings() {
-	if _, err := os.Stat(configPath()); err != nil {
-		return
+func createDefaultConfig() error {
+	configFile := configPath()
+	dir := filepath.Dir(configFile)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
 	}
 
-	logger.Printf("Loading settings from %s", configPath())
-	sections, err := config.ParseFile(configPath(), mainSettingsSection)
+	file, err := os.Create(configFile)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	defaultConfig := `root:              .
+tmp_path:          ./tmp
+build_name:        runner-build
+build_log:         runner-build-errors.log
+valid_ext:         .go, .tpl, .tmpl, .html
+no_rebuild_ext:    .tpl, .tmpl, .html
+ignored:           assets, tmp, node_modules, dist, build, .next, .nuxt, .vuepress, .vite
+ignored_ext:       .js, .jsx, .ts, .tsx, .mjs, .cjs, .css, .scss, .sass, .less, .styl, .vue, .json, .map, .svg, .png, .jpg, .jpeg, .gif, .ico, .woff, .woff2, .ttf, .eot
+build_delay:       600
+colors:            1
+log_color_main:    cyan
+log_color_build:   yellow
+log_color_runner:  green
+log_color_watcher: magenta
+log_color_app:
+`
+
+	_, err = file.WriteString(defaultConfig)
+	return err
+}
+
+func loadRunnerConfigSettings() {
+	configFile := configPath()
+	if _, err := os.Stat(configFile); err != nil {
+		if os.IsNotExist(err) {
+			if err := createDefaultConfig(); err != nil {
+				logger.Printf("Failed to create default config file: %s", err)
+				return
+			}
+			logger.Printf("Created default config file at %s", configFile)
+		} else {
+			return
+		}
+	}
+
+	logger.Printf("Loading settings from %s", configFile)
+	sections, err := config.ParseFile(configFile, mainSettingsSection)
 	if err != nil {
 		return
 	}
@@ -136,7 +180,7 @@ func buildErrorsFilePath() string {
 }
 
 func configPath() string {
-	return settings["config_path"]
+	return filepath.Join(tmpPath(), "run.ini")
 }
 
 func buildDelay() time.Duration {
