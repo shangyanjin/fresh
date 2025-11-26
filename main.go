@@ -14,11 +14,14 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"strings"
 
 	"github.com/pilu/fresh/runner"
 )
+
+const Version = "20251126"
 
 func main() {
 	flag.Parse()
@@ -28,5 +31,6 @@ func main() {
 		os.Setenv("RUNNER_APP_ARGS", strings.Join(args, " "))
 	}
 
+	fmt.Printf("fresh version %s\n", Version)
 	runner.Start()
 }
