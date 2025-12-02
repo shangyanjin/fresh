@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/codegangsta/martini"
-	"fresh/runner/runnerutils"
+	"github.com/shangyanjin/fresh/runner/runnerutils"
 	"net/http"
 	"os"
 )

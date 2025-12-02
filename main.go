@@ -9,7 +9,7 @@ import (
 	"flag"
 	"fmt"
 
-	"fresh/runner"
+	"github.com/shangyanjin/fresh/runner"
 )
 
 const Version = "20251126"

@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"fresh/config"
+	"github.com/shangyanjin/fresh/config"
 )
 
 const (

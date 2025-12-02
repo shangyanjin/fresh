@@ -1,4 +1,4 @@
-module fresh
+module github.com/shangyanjin/fresh
 
 go 1.24.0
 
